@@ -1,6 +1,7 @@
 // import { useRef } from "react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { Link } from "react-router-dom";
 
 import errorIcon from "../assets/errorIcon.png";
 
@@ -124,6 +125,12 @@ const Register = () => {
               <button className="w-full py-3 rounded-md text-white font-medium bg-primary hover:bg-accent duration-300 transition ease-in-out">
                 Register
               </button>
+              <p className=" text-sm mt-2 flex gap-1 justify-center">
+                Already have an account?
+                <Link to="/login" className=" text-blue-600 hover:underline">
+                  Login
+                </Link>
+              </p>
             </div>
           </form>
         </div>
