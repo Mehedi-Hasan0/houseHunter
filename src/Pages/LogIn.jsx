@@ -1,22 +1,38 @@
 // import { useRef } from "react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
-
-// import errorIcon from "../assets/errorIcon.png";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import { userLogin } from "../redux/actions/userActions";
+import { PulseLoader } from "react-spinners";
+import { useEffect } from "react";
 
 const LogIn = () => {
   const { register, handleSubmit } = useForm();
   const [passwordVisible, setPasswordVisible] = useState(false);
-  //   const selectRef = useRef();
+  const [isLoading, setIsLoading] = useState(false);
+  const loginResponseMessage = useSelector(
+    (state) => state.user.responseMessage
+  );
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const togglePasswordVisibility = () => {
     setPasswordVisible(!passwordVisible);
   };
 
-  const handleLogInData = (formData) => {
-    console.log(formData);
+  const handleLogInData = async (formData) => {
+    setIsLoading(true);
+    await dispatch(userLogin(formData));
+    setIsLoading(false);
   };
+  useEffect(() => {
+    if (loginResponseMessage === "Successfully logged in") {
+      setTimeout(() => {
+        navigate("/");
+      }, 400);
+    }
+  }, [navigate, loginResponseMessage]);
 
   return (
     <section className=" max-w-[2520px] mx-auto xl:px-20 md:px-10 sm:px-2 py-3 md:py-6 lg:py-9 2xl:py-12">
@@ -48,7 +64,6 @@ const LogIn = () => {
                 className="input input-bordered w-full transition-all duration-300"
                 {...register("password", {
                   required: true,
-                  pattern: /^(?=.*[a-z]).{8,}$/,
                 })}
               />
               <span
@@ -59,8 +74,22 @@ const LogIn = () => {
               </span>
             </div>
             <div className="w-[300px] sm:w-[400px] mt-5">
-              <button className="w-full py-3 rounded-md text-white font-medium bg-primary hover:bg-accent duration-300 transition ease-in-out">
-                Login
+              <button
+                disabled={isLoading}
+                className={`w-full py-3 rounded-md text-white font-medium bg-primary hover:bg-accent duration-300 transition ease-in-out disabled:bg-[#dddddd] ${
+                  isLoading ? "cursor-not-allowed" : ""
+                }`}
+              >
+                {isLoading ? (
+                  <PulseLoader
+                    color="#5cd183"
+                    size={7}
+                    margin={4}
+                    speedMultiplier={0.6}
+                  />
+                ) : (
+                  "Login"
+                )}
               </button>
               <p className=" text-sm mt-2 flex gap-1 justify-center">
                 New to House Hunter?

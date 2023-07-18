@@ -13,6 +13,13 @@ const userReducer = (state = initialState, { type, payload }) => {
                 loginResponse: payload.success,
                 responseMessage: payload.info
             };
+        case "USER_LOG_IN":
+            return {
+                ...state,
+                userDetails: payload.user_details,
+                loginResponse: payload.success,
+                responseMessage: payload.info
+            };
         case "USER_LOG_OUT": {
             localStorage.removeItem("accessToken");
             localStorage.removeItem("refreshToken");
