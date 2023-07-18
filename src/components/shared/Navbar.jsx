@@ -10,7 +10,6 @@ const Navbar = () => {
 
   useEffect(() => {
     dispatch(getUser());
-    console.log("user data");
   }, []);
 
   const hadnleLogout = () => {
@@ -31,9 +30,12 @@ const Navbar = () => {
         <div className=" flex flex-row gap-4">
           {user ? (
             <div className=" flex flex-row items-center gap-5">
-              <p className=" text-textColor hover:px-3 hover:py-1 hover:bg-secondary rounded-full">
+              <Link
+                to="/dashboard"
+                className=" text-textColor px-3 py-2 hover:bg-secondary opacity-90 rounded-full transition duration-200 cursor-pointer ease-in"
+              >
                 Dashboard
-              </p>
+              </Link>
               <Link to="/register">
                 <button
                   onClick={hadnleLogout}

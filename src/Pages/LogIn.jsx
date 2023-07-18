@@ -29,7 +29,7 @@ const LogIn = () => {
   useEffect(() => {
     if (loginResponseMessage === "Successfully logged in") {
       setTimeout(() => {
-        navigate("/");
+        navigate("/dashboard");
       }, 400);
     }
   }, [navigate, loginResponseMessage]);
