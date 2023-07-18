@@ -1,6 +1,6 @@
 import axios from "axios";
 import { toast } from "react-hot-toast";
-import { API } from "../../../backend";
+import api, { API } from "../../../backend";
 
 export const registerNewUser = (formData) => async (dispatch) => {
 
@@ -55,4 +55,10 @@ export const registerNewUser = (formData) => async (dispatch) => {
         localStorage.removeItem("refreshToken");
         toast.error("Network error try again later!");
     }
+}
+
+export const userLogOut = () => async (dispatch) => {
+    const response = await api.post("/auth/logout");
+    console.log(response)
+    dispatch({ type: "USER_LOG_OUT" })
 }

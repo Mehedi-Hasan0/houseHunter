@@ -42,7 +42,7 @@ const Register = () => {
   return (
     <section className=" max-w-[2520px] mx-auto xl:px-20 md:px-10 sm:px-2 py-3 md:py-6 lg:py-9 2xl:py-12">
       <div className=" flex flex-col justify-center items-center max-w-lg mx-4 sm:mx-auto shadow-md bg-white py-5 border-neutral-200 border rounded-xl">
-        <h5 className=" text-textColor text-3xl font-medium">Register Now</h5>
+        <h5 className=" text-textColor text-3xl font-medium">Register </h5>
         <div className=" py-4">
           <form onSubmit={handleSubmit(handleRegisterData)}>
             <div className="form-control w-full">
