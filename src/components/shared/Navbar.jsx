@@ -1,11 +1,17 @@
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import logo from "../../assets/house-hunter-logo.png";
-import { userLogOut } from "../../redux/actions/userActions";
+import { getUser, userLogOut } from "../../redux/actions/userActions";
 
 const Navbar = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user.userDetails);
+
+  useEffect(() => {
+    dispatch(getUser());
+    console.log("user data");
+  }, []);
 
   const hadnleLogout = () => {
     dispatch(userLogOut());
@@ -24,14 +30,19 @@ const Navbar = () => {
         </div>
         <div className=" flex flex-row gap-4">
           {user ? (
-            <Link to="/register">
-              <button
-                onClick={hadnleLogout}
-                className=" py-2 px-3 rounded-md bg-primary hover:bg-accent duration-300 transition text-white font-medium"
-              >
-                Log out
-              </button>
-            </Link>
+            <div className=" flex flex-row items-center gap-5">
+              <p className=" text-textColor hover:px-3 hover:py-1 hover:bg-secondary rounded-full">
+                Dashboard
+              </p>
+              <Link to="/register">
+                <button
+                  onClick={hadnleLogout}
+                  className=" py-2 px-3 rounded-md bg-primary hover:bg-accent duration-300 transition text-white font-medium"
+                >
+                  Log out
+                </button>
+              </Link>
+            </div>
           ) : (
             <>
               <Link to="/register">

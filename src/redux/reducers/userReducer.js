@@ -29,6 +29,10 @@ const userReducer = (state = initialState, { type, payload }) => {
                 responseMessage: ""
             }
         }
+        case "GET_USER_DETAILS":
+            return {
+                userDetails: payload
+            }
         default:
             return state
     }
