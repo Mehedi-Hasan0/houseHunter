@@ -14,10 +14,15 @@ const Navbar = () => {
             House Hunter
           </Link>
         </div>
-        <div>
+        <div className=" flex flex-row gap-4">
           <Link to="/register">
             <button className=" py-2 px-3 rounded-md bg-primary hover:bg-accent duration-300 transition text-white font-medium">
               Register
+            </button>
+          </Link>
+          <Link to="/login">
+            <button className=" py-2 px-3 rounded-md border border-primary hover:bg-accent hover:text-white duration-300 transition text-textColor font-medium">
+              Login
             </button>
           </Link>
         </div>

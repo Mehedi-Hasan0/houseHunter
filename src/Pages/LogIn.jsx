@@ -52,7 +52,7 @@ const LogIn = () => {
                 })}
               />
               <span
-                className="absolute top-[58%] right-3 transform -translate-y-1/2 text-[#222222] text-xs font-semibold underline cursor-pointer"
+                className="absolute top-[70%] right-3 transform -translate-y-1/2 text-[#222222] text-xs font-semibold underline cursor-pointer"
                 onClick={togglePasswordVisibility}
               >
                 {passwordVisible ? "Hide" : "Show"}
