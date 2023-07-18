@@ -1,9 +1,12 @@
 // import { useRef } from "react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import { PulseLoader } from "react-spinners";
 
 import errorIcon from "../assets/errorIcon.png";
+import { registerNewUser } from "../redux/actions/userActions";
 
 const Register = () => {
   const {
@@ -12,14 +15,28 @@ const Register = () => {
     formState: { errors },
   } = useForm();
   const [passwordVisible, setPasswordVisible] = useState(false);
-  //   const selectRef = useRef();
+  const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const togglePasswordVisibility = () => {
     setPasswordVisible(!passwordVisible);
   };
 
-  const handleRegisterData = (formData) => {
-    console.log(formData);
+  const handleRegisterData = async (formData) => {
+    try {
+      setIsLoading(true);
+      await dispatch(registerNewUser(formData));
+      setIsLoading(false);
+      setTimeout(() => {
+        navigate("/");
+      }, 400);
+    } catch (error) {
+      setIsLoading(false);
+      console.log(error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -38,6 +55,19 @@ const Register = () => {
                 className="input input-bordered w-[300px] sm:w-[400px]"
                 {...register("name", { required: true, maxLength: 40 })}
               />
+              {errors.name && (
+                <div
+                  role="alert"
+                  className=" flex flex-row items-center gap-2 mt-1"
+                >
+                  <img
+                    src={errorIcon}
+                    alt="Last name is requires"
+                    className="w-5"
+                  />
+                  <p className="text-xs text-[#c13515]">Name is required</p>
+                </div>
+              )}
             </div>
             <div className="form-control w-full mt-3">
               <label className="label">
@@ -53,6 +83,19 @@ const Register = () => {
                 <option>House Owner</option>
                 <option>House Renter</option>
               </select>
+              {errors.role && (
+                <div
+                  role="alert"
+                  className=" flex flex-row items-center gap-2 mt-1"
+                >
+                  <img
+                    src={errorIcon}
+                    alt="Last name is requires"
+                    className="w-5"
+                  />
+                  <p className="text-xs text-[#c13515]">Pic a role!</p>
+                </div>
+              )}
             </div>
             <div className="form-control w-full mt-3">
               <label className="label">
@@ -64,6 +107,21 @@ const Register = () => {
                 className="input input-bordered w-[300px] sm:w-[400px]"
                 {...register("phoneNumber", { required: true, maxLength: 14 })}
               />
+              {errors.phoneNumber && (
+                <div
+                  role="alert"
+                  className=" flex flex-row items-center gap-2 mt-1"
+                >
+                  <img
+                    src={errorIcon}
+                    alt="Last name is requires"
+                    className="w-5"
+                  />
+                  <p className="text-xs text-[#c13515]">
+                    Give a valid phone number
+                  </p>
+                </div>
+              )}
             </div>
             <div className="form-control w-full mt-3">
               <label className="label">
@@ -73,11 +131,26 @@ const Register = () => {
                 type="email"
                 placeholder="Your email"
                 className="input input-bordered w-[300px] sm:w-[400px]"
-                {...register("email", {
+                {...register("emailId", {
                   required: true,
                   pattern: /^\S+@\S+$/i,
                 })}
               />
+              {errors.emailId && (
+                <div
+                  role="alert"
+                  className=" flex flex-row items-center gap-2 mt-1"
+                >
+                  <img
+                    src={errorIcon}
+                    alt="Last name is requires"
+                    className="w-5"
+                  />
+                  <p className="text-xs text-[#c13515]">
+                    Provide a valid email address
+                  </p>
+                </div>
+              )}
             </div>
             <div className="relative mt-3">
               <label className="label">
@@ -122,8 +195,22 @@ const Register = () => {
               </p>
             </div>
             <div className="w-[300px] sm:w-[400px] mt-5">
-              <button className="w-full py-3 rounded-md text-white font-medium bg-primary hover:bg-accent duration-300 transition ease-in-out">
-                Register
+              <button
+                disabled={isLoading}
+                className={`w-full py-3 rounded-md text-white font-medium bg-primary hover:bg-accent duration-300 transition ease-in-out disabled:bg-[#dddddd] ${
+                  isLoading ? " cursor-not-allowed" : ""
+                }`}
+              >
+                {isLoading ? (
+                  <PulseLoader
+                    color="#5cd183"
+                    size={7}
+                    margin={4}
+                    speedMultiplier={0.6}
+                  />
+                ) : (
+                  "Register"
+                )}
               </button>
               <p className=" text-sm mt-2 flex gap-1 justify-center">
                 Already have an account?
