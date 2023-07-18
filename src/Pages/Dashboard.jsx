@@ -17,7 +17,11 @@ const Dashboard = () => {
         />
       </div>
       <div className=" col-span-8">
-        {userRole === "House Owner" ? <OwnerDashboard /> : <RenterDashboard />}
+        {userRole === "House Owner" ? (
+          <OwnerDashboard selectedMenu={selectedMenu} />
+        ) : (
+          <RenterDashboard />
+        )}
       </div>
     </section>
   );

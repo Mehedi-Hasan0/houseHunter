@@ -17,7 +17,7 @@ const LeftDashboardPanel = ({ selectedMenu, setSelectedMenu }) => {
             !selectedMenu ? " bg-secondary" : ""
           }`}
         >
-          <img src={dashboard} alt="dashboard" className=" w-6 md:w-8" />
+          <img src={dashboard} alt="dashboard" className=" w-6 2xl:w-7" />
           <p className=" text-base md:text-lg">House list</p>
         </div>
         <div
@@ -28,7 +28,7 @@ const LeftDashboardPanel = ({ selectedMenu, setSelectedMenu }) => {
             selectedMenu ? "bg-secondary" : ""
           }`}
         >
-          <img src={booking} alt="dashboard" className=" w-6 md:w-7" />
+          <img src={booking} alt="dashboard" className=" w-5 2xl:w-7" />
           <p className=" text-base md:text-lg">Booking</p>
         </div>
         {/* <div className=" flex flex-row items-center gap-3 mx-4">
