@@ -1,8 +1,112 @@
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
+import { useState } from "react";
+import { useEffect } from "react";
+import { toast } from "react-hot-toast";
+import api, { API } from "../../backend";
+
 const Home = () => {
+  const [allHouses, setAllHouses] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [alreadyBooked, setAlreadyBooked] = useState(null);
+
+  const { data: bookingList, refetch } = useQuery({
+    queryKey: ["houseList"],
+    queryFn: async () => {
+      const response = await api.get("/auth/booking_list");
+      return response.data.data;
+    },
+  });
+
+  console.log(bookingList);
+
+  const handleBookings = async (houseId) => {
+    try {
+      setIsLoading(true);
+      const bookingResponse = await api.post("/auth/bookings", { houseId });
+      if (bookingResponse?.data.status === 200) {
+        toast.success(bookingResponse?.data.message);
+        setIsLoading(false);
+        refetch();
+      }
+      console.log(bookingResponse, "Booking response");
+    } catch (error) {
+      console.log(error);
+      setIsLoading(false);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    async function GetAllHouses() {
+      const response = await axios.get(`${API}auth/all_houses_list`);
+      setAllHouses(response?.data.data);
+    }
+    GetAllHouses();
+  }, []);
+  console.log(allHouses);
   return (
-    <div>
-      <p>In home</p>
-    </div>
+    <main
+      className=" max-w-[2520px] mx-auto xl:px-20 md:px-10 sm:px-2 px-4 py-5 md:py-9 lg:py-10 2xl:py-14  
+     "
+    >
+      <section className=" grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4  gap-5 sm:gap-6 md:gap-8 lg:gap-10">
+        {allHouses &&
+          allHouses.map((house, i) => {
+            const isIdMatch = bookingList?.some(
+              (list) => list.houseId === house._id
+            );
+            console.log(isIdMatch);
+            return (
+              <div
+                key={i}
+                className=" flex flex-col gap-y-3 shadow-md bg-white border border-neutral-200 rounded-2xl relative pb-14"
+              >
+                <div>
+                  <img
+                    src={house?.houseImage}
+                    alt="House"
+                    className="rounded-t-2xl"
+                  />
+                </div>
+                <div className=" flex flex-col gap-y-1 text-sm py-3 px-2 md:pt-3 md:pb-5 md:px-4">
+                  <p>
+                    <span className="font-medium">Bedrooms:</span>{" "}
+                    {house?.bedrooms}, Room size: {house?.roomSize} sft
+                  </p>
+                  <p>
+                    {" "}
+                    <span className="font-medium">Available from:</span>{" "}
+                    {house?.availablityDate}
+                  </p>
+                  <p>
+                    <span className=" font-medium"> Phone number:</span>{" "}
+                    {house?.phoneNumber}
+                  </p>
+                  <p>
+                    <span className=" font-medium"> Rent per month:</span>{" "}
+                    {house?.rentPerMonth}tk
+                  </p>
+                </div>
+                <button
+                  onClick={() => {
+                    handleBookings(house?._id);
+                  }}
+                  disabled={isLoading || isIdMatch}
+                  className=" py-3 px-6 md:px-9 absolute bottom-0 right-0 rounded-br-2xl rounded-tl-2xl bg-primary hover:bg-accent duration-300 transition text-white font-medium disabled:bg-[#dddddd] disabled:cursor-not-allowed"
+                >
+                  {isIdMatch ? (
+                    <p className=" text-[#717171] text-sm">Aready booked</p>
+                  ) : (
+                    "Book"
+                  )}
+                </button>
+              </div>
+            );
+          })}
+      </section>
+    </main>
   );
 };
 
