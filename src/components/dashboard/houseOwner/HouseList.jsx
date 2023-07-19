@@ -48,7 +48,7 @@ const HouseList = () => {
           </div>
         ) : (
           <>
-            <HouseListTable houseList={houseList} />
+            <HouseListTable houseList={houseList} refetch={refetch} />
           </>
         )}
       </section>

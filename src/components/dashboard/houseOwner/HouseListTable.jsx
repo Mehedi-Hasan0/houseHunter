@@ -1,17 +1,29 @@
-import { toast } from "react-hot-toast";
-import api from "../../../../backend";
+// import { toast } from "react-hot-toast";
+// import api from "../../../../backend";
+import { useState } from "react";
+import EditHouseDetailsModal from "./EditHouseDetailsModal";
 
 /* eslint-disable react/prop-types */
-const HouseListTable = ({ houseList }) => {
-  const handleHouseDetailEdit = async (houseId) => {
-    try {
-      const editResponse = await api.post("/auth/edit_house_details");
-      console.log(editResponse);
-    } catch (error) {
-      console.log(error);
-      toast.error(error);
-    }
-  };
+const HouseListTable = ({ houseList, refetch }) => {
+  const [houseDetailForEdit, setHouseDetailForEdit] = useState(null);
+  //   const handleHouseDetailEdit = async (houseId) => {
+  //     let houseID = { houseId };
+  //     try {
+  //       const editResponse = await api.patch(
+  //         "/auth/edit_house_details",
+  //         houseID,
+  //         {
+  //           headers: {
+  //             "Content-Type": "application/json",
+  //           },
+  //         }
+  //       );
+  //       console.log(editResponse);
+  //     } catch (error) {
+  //       console.log(error);
+  //       toast.error(error);
+  //     }
+  //   };
 
   return (
     <section>
@@ -67,7 +79,8 @@ const HouseListTable = ({ houseList }) => {
                         <button
                           className="btn btn-ghost btn-xs"
                           onClick={() => {
-                            handleHouseDetailEdit(house?._id);
+                            window.my_modal_4.showModal();
+                            setHouseDetailForEdit(house);
                           }}
                         >
                           edit
@@ -85,6 +98,10 @@ const HouseListTable = ({ houseList }) => {
           </tbody>
         </table>
       </div>
+      <EditHouseDetailsModal
+        houseDefaultValue={houseDetailForEdit}
+        refetch={refetch}
+      />
     </section>
   );
 };
