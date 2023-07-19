@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import BookingListTable from "./BookingListTable";
 
 const Bookings = () => {
   const navigate = useNavigate();
@@ -21,6 +22,12 @@ const Bookings = () => {
           </p>
         </div>
       </div>
+      {/* booking data */}
+      <section className="py-4 md:py-8 lg:py-12">
+        <div>
+          <BookingListTable />
+        </div>
+      </section>
     </section>
   );
 };
