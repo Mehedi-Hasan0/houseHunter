@@ -13,7 +13,7 @@ const Home = () => {
   const [allHouses, setAllHouses] = useState([]);
   const [houseId, setHouseId] = useState(null);
   const [page, setPage] = useState(1);
-  const [loading, setIsLoading] = useState(true);
+  // const [loading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState(null);
   const [filteredSearchData, setFilteredSearchData] = useState(null);
   const [filteredOptionsData, setFilteredOptionsData] = useState(null);
@@ -35,7 +35,7 @@ const Home = () => {
       document.documentElement.scrollHeight
     ) {
       setPage((prev) => prev + 1);
-      setIsLoading(true);
+      // setIsLoading(true);
     }
   };
   // console.log(page);
@@ -68,7 +68,7 @@ const Home = () => {
         const mergedHouses = [...prev, ...response.data.data];
         return removeDuplicates(mergedHouses);
       });
-      setIsLoading(false);
+      // setIsLoading(false);
     }
     GetAllHouses();
   }, [page]);
