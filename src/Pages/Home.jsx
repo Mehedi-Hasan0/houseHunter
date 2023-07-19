@@ -319,12 +319,16 @@ const Home = () => {
           </>
         )}
       </section>
-      <FilterOptionsModal setFilterModalData={setFilterModalData} />
-      <BookingModal
-        houseId={houseId}
-        refetch={refetch}
-        bookingList={bookingList}
-      />
+      <>
+        <FilterOptionsModal setFilterModalData={setFilterModalData} />
+      </>
+      <>
+        <BookingModal
+          houseId={houseId}
+          refetch={refetch}
+          bookingList={bookingList}
+        />
+      </>
     </main>
   );
 };
