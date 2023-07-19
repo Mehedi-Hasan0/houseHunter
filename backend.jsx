@@ -1,9 +1,11 @@
 import axios from "axios";
 
-export const API = "https://house-hunter-server-v4.onrender.com/";
+export const API = "http://localhost:5000/";
+// export const API = "https://house-hunter-server-v4.onrender.com/";
 
 const api = axios.create({
-  baseURL: "https://house-hunter-server-v4.onrender.com",
+  baseURL: "http://localhost:5000",
+  // baseURL: "https://house-hunter-server-v4.onrender.com",
 });
 
 api.interceptors.request.use(
