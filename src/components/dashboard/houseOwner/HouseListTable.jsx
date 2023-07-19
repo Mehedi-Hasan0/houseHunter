@@ -1,32 +1,27 @@
-// import { toast } from "react-hot-toast";
-// import api from "../../../../backend";
+import { toast } from "react-hot-toast";
+import api from "../../../../backend";
 import { useState } from "react";
 import EditHouseDetailsModal from "./EditHouseDetailsModal";
 
 /* eslint-disable react/prop-types */
 const HouseListTable = ({ houseList, refetch }) => {
   const [houseDetailForEdit, setHouseDetailForEdit] = useState(null);
-  //   const handleHouseDetailEdit = async (houseId) => {
-  //     let houseID = { houseId };
-  //     try {
-  //       const editResponse = await api.patch(
-  //         "/auth/edit_house_details",
-  //         houseID,
-  //         {
-  //           headers: {
-  //             "Content-Type": "application/json",
-  //           },
-  //         }
-  //       );
-  //       console.log(editResponse);
-  //     } catch (error) {
-  //       console.log(error);
-  //       toast.error(error);
-  //     }
-  //   };
+  const handleDeleteHouse = async (houseId) => {
+    try {
+      const editResponse = await api.delete(`/auth/delete_houses/${houseId}`);
+      console.log(editResponse);
+      if (editResponse?.data.status === 200) {
+        toast.success(editResponse?.data.message);
+        refetch();
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(error);
+    }
+  };
 
   return (
-    <section>
+    <section className="">
       <div className="overflow-x-scroll md:overflow-x-auto max-w-screen">
         <table className="table">
           {/* head */}
@@ -87,7 +82,12 @@ const HouseListTable = ({ houseList, refetch }) => {
                         </button>
                       </th>
                       <th>
-                        <button className="btn btn-ghost hover:btn-error hover:text-white btn-xs">
+                        <button
+                          className="btn btn-ghost hover:btn-error hover:text-white btn-xs"
+                          onClick={() => {
+                            handleDeleteHouse(house._id);
+                          }}
+                        >
                           delete
                         </button>
                       </th>

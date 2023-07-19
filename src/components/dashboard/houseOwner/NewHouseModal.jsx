@@ -98,6 +98,8 @@ const NewHouseModal = ({ refetch }) => {
     }
   }, [image]);
 
+  console.log(image, houseImageLink, isImgUploading);
+
   return (
     <>
       <dialog id="my_modal_5" className="modal modal-bottom sm:modal-middle">

@@ -22,7 +22,7 @@ const HouseList = () => {
             <p className=" text-xl font-medium">
               {houseList?.length} houses on rent
             </p>
-            <p className="text-base">Total Houses</p>
+            <p className="text-base">Total Houses own: {houseList?.length}</p>
           </div>
           <div className="bg-[#e6f5eb] max-w-xs flex flex-col gap-y-4 px-6 py-3 rounded-lg border border-[#eef4f9] shadow">
             <p className=" text-xl font-medium">Want to rent a new house!!</p>
@@ -47,9 +47,9 @@ const HouseList = () => {
             />
           </div>
         ) : (
-          <>
+          <div className="mt-5">
             <HouseListTable houseList={houseList} refetch={refetch} />
-          </>
+          </div>
         )}
       </section>
       <NewHouseModal refetch={refetch} />

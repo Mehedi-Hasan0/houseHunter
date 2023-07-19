@@ -280,7 +280,7 @@ const EditHouseDetailsModal = ({ houseDefaultValue, refetch }) => {
               </label>
               <input
                 type="file"
-                id="image-input"
+                id="image-input-2"
                 placeholder="House image"
                 defaultValue={houseDefaultValue?.houseImage}
                 className=" hidden"
@@ -294,7 +294,7 @@ const EditHouseDetailsModal = ({ houseDefaultValue, refetch }) => {
               />
               <div className=" w-full p-3 border border-[#d2d4d7] rounded-lg text-[#9ca3af]">
                 <label
-                  htmlFor="image-input"
+                  htmlFor="image-input-2"
                   className=" cursor-pointer block w-full"
                 >
                   {image ? (
