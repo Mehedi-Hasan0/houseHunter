@@ -88,7 +88,11 @@ const Home = () => {
             );
           })}
       </section>
-      <BookingModal houseId={houseId} refetch={refetch} />
+      <BookingModal
+        houseId={houseId}
+        refetch={refetch}
+        bookingList={bookingList}
+      />
     </main>
   );
 };

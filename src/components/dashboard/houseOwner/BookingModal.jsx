@@ -6,7 +6,7 @@ import { useSelector } from "react-redux";
 import { PulseLoader } from "react-spinners";
 import api from "../../../../backend";
 
-const BookingModal = ({ houseId, refetch }) => {
+const BookingModal = ({ houseId, refetch, bookingList }) => {
   const housesID = houseId;
   const {
     register,
@@ -24,26 +24,37 @@ const BookingModal = ({ houseId, refetch }) => {
       ...data,
       name: user?.name,
       email: user?.emailId,
+      userId: user?._id,
     };
-    try {
-      setIsLoading(true);
-      const bookingResponse = await api.post("/auth/bookings", {
-        housesID,
-        BookingUserData,
-      });
-      if (bookingResponse?.data.status === 200) {
-        toast.success(bookingResponse?.data.message);
+    if (bookingList.length >= 2 && user?.role === "House Owner") {
+      window.my_modal_1.close();
+      toast.error("Only house renter can book places");
+    }
+    if (bookingList.length >= 2 && user?.role !== "House Owner") {
+      window.my_modal_1.close();
+      toast.error("Can't book more than two place!!");
+    }
+    if (bookingList.length < 2) {
+      try {
+        setIsLoading(true);
+        const bookingResponse = await api.post("/auth/bookings", {
+          housesID,
+          BookingUserData,
+        });
+        if (bookingResponse?.data.status === 200) {
+          toast.success(bookingResponse?.data.message);
+          setIsLoading(false);
+          refetch();
+          window.my_modal_1.close();
+          reset();
+        }
+        console.log(bookingResponse, "Booking response");
+      } catch (error) {
+        console.log(error);
         setIsLoading(false);
-        refetch();
-        window.my_modal_1.close();
-        reset();
+      } finally {
+        setIsLoading(false);
       }
-      console.log(bookingResponse, "Booking response");
-    } catch (error) {
-      console.log(error);
-      setIsLoading(false);
-    } finally {
-      setIsLoading(false);
     }
   };
 
