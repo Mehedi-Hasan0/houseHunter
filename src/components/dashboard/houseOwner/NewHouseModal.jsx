@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
@@ -7,7 +8,7 @@ import api from "../../../../backend";
 
 import errorIcon from "../../../assets/errorIcon.png";
 
-const NewHouseModal = () => {
+const NewHouseModal = ({ refetch }) => {
   const userId = useSelector((state) => state.user.userDetails?._id);
   const {
     register,
@@ -32,6 +33,7 @@ const NewHouseModal = () => {
       const houseData = {
         ...data,
         houseImage: houseImageLink,
+        bathrooms: data.bathrooms,
         userId: userId,
       };
 
@@ -47,6 +49,7 @@ const NewHouseModal = () => {
         setIsHouseInfoUploading(false);
         setImage(null);
         reset();
+        refetch();
         window.my_modal_5.close();
       }
     } catch (error) {
@@ -387,10 +390,17 @@ const NewHouseModal = () => {
                 <span className="label-text">Phone number</span>
               </label>
               <input
-                type="number"
+                type="text"
                 placeholder="Your phone number"
                 className="input input-bordered w-full"
-                {...register("phoneNumber", { required: true, maxLength: 11 })}
+                {...register("phoneNumber", {
+                  required: true,
+                  pattern: {
+                    value: /^(?:\+?88)?01[3-9]\d{8}$/,
+                    message:
+                      "Please provide a valid Bangladeshi phone number. +880..",
+                  },
+                })}
               />
               {errors.phoneNumber && (
                 <div
@@ -403,7 +413,7 @@ const NewHouseModal = () => {
                     className="w-5"
                   />
                   <p className="text-xs text-[#c13515]">
-                    Give a valid phone number
+                    {errors.phoneNumber.message}
                   </p>
                 </div>
               )}
