@@ -3,11 +3,11 @@ import axios from "axios";
 import { useState } from "react";
 import { useEffect } from "react";
 import api, { API } from "../../backend";
-import FilterOptionsModal from "../components/filterOptions/filterOptionsModal";
 import BookingModal from "../components/dashboard/houseOwner/BookingModal";
 
 import searchIcon from "../assets/searchIcon.svg";
 import { toast } from "react-hot-toast";
+import FilterOptionsModal from "../components/dashboard/FilterOptionsModal";
 
 const Home = () => {
   const [allHouses, setAllHouses] = useState([]);
