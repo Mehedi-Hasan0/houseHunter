@@ -2,13 +2,12 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useState } from "react";
 import { useEffect } from "react";
-import { toast } from "react-hot-toast";
 import api, { API } from "../../backend";
+import BookingModal from "../components/dashboard/houseOwner/BookingModal";
 
 const Home = () => {
   const [allHouses, setAllHouses] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [alreadyBooked, setAlreadyBooked] = useState(null);
+  const [houseId, setHouseId] = useState(null);
 
   const { data: bookingList, refetch } = useQuery({
     queryKey: ["houseList"],
@@ -19,24 +18,6 @@ const Home = () => {
   });
 
   console.log(bookingList);
-
-  const handleBookings = async (houseId) => {
-    try {
-      setIsLoading(true);
-      const bookingResponse = await api.post("/auth/bookings", { houseId });
-      if (bookingResponse?.data.status === 200) {
-        toast.success(bookingResponse?.data.message);
-        setIsLoading(false);
-        refetch();
-      }
-      console.log(bookingResponse, "Booking response");
-    } catch (error) {
-      console.log(error);
-      setIsLoading(false);
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   useEffect(() => {
     async function GetAllHouses() {
@@ -91,9 +72,10 @@ const Home = () => {
                 </div>
                 <button
                   onClick={() => {
-                    handleBookings(house?._id);
+                    setHouseId(house?._id);
+                    window.my_modal_1.showModal();
                   }}
-                  disabled={isLoading || isIdMatch}
+                  disabled={isIdMatch}
                   className=" py-3 px-6 md:px-9 absolute bottom-0 right-0 rounded-br-2xl rounded-tl-2xl bg-primary hover:bg-accent duration-300 transition text-white font-medium disabled:bg-[#dddddd] disabled:cursor-not-allowed"
                 >
                   {isIdMatch ? (
@@ -106,6 +88,7 @@ const Home = () => {
             );
           })}
       </section>
+      <BookingModal houseId={houseId} refetch={refetch} />
     </main>
   );
 };
