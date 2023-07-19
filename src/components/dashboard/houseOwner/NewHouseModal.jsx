@@ -1,5 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "react-hot-toast";
+import { PulseLoader } from "react-spinners";
 
 import errorIcon from "../../../assets/errorIcon.png";
 
@@ -12,10 +14,59 @@ const NewHouseModal = () => {
   } = useForm();
 
   const [image, setImage] = useState(null);
+  const [houseImageLink, setHouseImageLink] = useState("");
+  const [imageError, setImageError] = useState(null);
+  const [isImgUploading, setIsImgUploading] = useState(false);
 
-  const handleHouseInfo = (data) => {
-    console.log(data);
+  const handleImageChange = (e) => {
+    setImage(e.target.files[0]);
   };
+
+  const handleHouseInfo = async (data) => {
+    const houseData = {
+      ...data,
+      houseImage: houseImageLink,
+    };
+    console.log(houseData);
+  };
+
+  useEffect(() => {
+    setIsImgUploading(true);
+    if (image !== null && image.size / 1000000 < 9) {
+      const imageFormData = new FormData();
+      imageFormData.append("file", image);
+      imageFormData.append("upload_preset", "house-hunter");
+      imageFormData.append("cloud_name", "dlhexsnxq");
+
+      try {
+        fetch("https://api.cloudinary.com/v1_1/dlhexsnxq/image/upload", {
+          method: "POST",
+          body: imageFormData,
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            setHouseImageLink(data.url);
+            if (data.error) {
+              setImageError(data.error.message);
+              setIsImgUploading(false);
+            } else {
+              setImageError(null);
+              setIsImgUploading(false);
+            }
+          })
+          .catch((err) => {
+            toast.error(err.message + "try again");
+            setIsImgUploading(false);
+          });
+      } catch (error) {
+        console.log(error);
+        setIsImgUploading(false);
+      }
+    } else if (image?.size / 1000000 > 9) {
+      setImageError("Image size can't exceed 10mb");
+      setIsImgUploading(false);
+    }
+  }, [image]);
 
   return (
     <>
@@ -201,7 +252,7 @@ const NewHouseModal = () => {
                   required: true,
                 })}
                 onChange={(e) => {
-                  setImage(e.target.files[0]);
+                  handleImageChange(e);
                 }}
                 accept=".jpg,.jpeg,.png,image/jpeg,image/jpg,image/png"
               />
@@ -211,7 +262,20 @@ const NewHouseModal = () => {
                   className=" cursor-pointer block w-full"
                 >
                   {image ? (
-                    <p className=" text-textColor">{image?.name}</p>
+                    <p className=" text-textColor">
+                      {isImgUploading ? (
+                        <div className=" flex justify-center py-1">
+                          <PulseLoader
+                            color="#5cd183"
+                            size={7}
+                            margin={4}
+                            speedMultiplier={0.6}
+                          />
+                        </div>
+                      ) : (
+                        <>{image?.name}</>
+                      )}
+                    </p>
                   ) : (
                     "Choose image"
                   )}
@@ -228,6 +292,16 @@ const NewHouseModal = () => {
                     className="w-5"
                   />
                   <p className="text-xs text-[#c13515]">This is required</p>
+                </div>
+              )}
+              {imageError === "Unsupported source URL: null" ? (
+                ""
+              ) : (
+                <div
+                  role="alert"
+                  className=" flex flex-row items-center gap-2 mt-1"
+                >
+                  <p className="text-xs text-[#c13515]">{imageError}</p>
                 </div>
               )}
             </div>
@@ -337,7 +411,12 @@ const NewHouseModal = () => {
 
           {/* submit button */}
           <div className="modal-action">
-            <button className="btn">Close</button>
+            <button
+              className="bg-primary disabled:btn-error disabled:cursor-not-allowed disabled:bg-[#dddddd] px-3 py-2 rounded-md text-white hover:bg-accent transition duration-200 font-medium"
+              disabled={imageError}
+            >
+              {imageError ? "Give valid image" : "Submit"}
+            </button>
           </div>
         </form>
         {/* close button */}
@@ -347,6 +426,8 @@ const NewHouseModal = () => {
           onClick={() => {
             reset();
             setImage(null);
+            setImageError(null);
+            setHouseImageLink("");
           }}
         >
           <button>close</button>
