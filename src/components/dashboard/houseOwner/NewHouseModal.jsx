@@ -1,11 +1,14 @@
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
+import { useSelector } from "react-redux";
 import { PulseLoader } from "react-spinners";
+import api from "../../../../backend";
 
 import errorIcon from "../../../assets/errorIcon.png";
 
 const NewHouseModal = () => {
+  const userId = useSelector((state) => state.user.userDetails?._id);
   const {
     register,
     handleSubmit,
@@ -17,22 +20,46 @@ const NewHouseModal = () => {
   const [houseImageLink, setHouseImageLink] = useState("");
   const [imageError, setImageError] = useState(null);
   const [isImgUploading, setIsImgUploading] = useState(false);
+  const [isHouseInfoUploading, setIsHouseInfoUploading] = useState(false);
 
   const handleImageChange = (e) => {
     setImage(e.target.files[0]);
   };
 
   const handleHouseInfo = async (data) => {
-    const houseData = {
-      ...data,
-      houseImage: houseImageLink,
-    };
-    console.log(houseData);
+    try {
+      setIsHouseInfoUploading(true);
+      const houseData = {
+        ...data,
+        houseImage: houseImageLink,
+        userId: userId,
+      };
+
+      const houseInfoResponse = await api.post(
+        "/auth/house_details",
+        houseData,
+        {
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+      if (houseInfoResponse.data.status === 200) {
+        toast.success(houseInfoResponse.data.message);
+        setIsHouseInfoUploading(false);
+        setImage(null);
+        reset();
+        window.my_modal_5.close();
+      }
+    } catch (error) {
+      console.log(error);
+      setIsHouseInfoUploading(false);
+    } finally {
+      setIsHouseInfoUploading(false);
+    }
   };
 
   useEffect(() => {
     setIsImgUploading(true);
-    if (image !== null && image.size / 1000000 < 9) {
+    if (image !== null && image?.size / 500000 < 5) {
       const imageFormData = new FormData();
       imageFormData.append("file", image);
       imageFormData.append("upload_preset", "house-hunter");
@@ -47,7 +74,7 @@ const NewHouseModal = () => {
           .then((data) => {
             setHouseImageLink(data.url);
             if (data.error) {
-              setImageError(data.error.message);
+              setImageError(data?.error?.message);
               setIsImgUploading(false);
             } else {
               setImageError(null);
@@ -62,8 +89,8 @@ const NewHouseModal = () => {
         console.log(error);
         setIsImgUploading(false);
       }
-    } else if (image?.size / 1000000 > 9) {
-      setImageError("Image size can't exceed 10mb");
+    } else if (image?.size / 500000 > 5) {
+      setImageError("Image size can't exceed 5mb");
       setIsImgUploading(false);
     }
   }, [image]);
@@ -415,7 +442,22 @@ const NewHouseModal = () => {
               className="bg-primary disabled:btn-error disabled:cursor-not-allowed disabled:bg-[#dddddd] px-3 py-2 rounded-md text-white hover:bg-accent transition duration-200 font-medium"
               disabled={imageError}
             >
-              {imageError ? "Give valid image" : "Submit"}
+              {imageError ? (
+                "Give valid image"
+              ) : (
+                <>
+                  {isHouseInfoUploading ? (
+                    <PulseLoader
+                      color="#afd6e9"
+                      size={7}
+                      margin={4}
+                      speedMultiplier={0.6}
+                    />
+                  ) : (
+                    "Submit"
+                  )}
+                </>
+              )}
             </button>
           </div>
         </form>
